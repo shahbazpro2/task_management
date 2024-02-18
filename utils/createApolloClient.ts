@@ -2,8 +2,9 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const createApolloClient = () => {
   return new ApolloClient({
-    uri: "https://countries.trevorblades.com",
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
     cache: new InMemoryCache(),
+
   });
 };
 
