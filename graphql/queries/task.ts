@@ -9,7 +9,7 @@ export const GetTasks = gql`
         dueDate
         members{
             id
-            userId{
+            user{
                 id
                 email
                 name
@@ -18,3 +18,27 @@ export const GetTasks = gql`
     }
   }
 `;
+
+export const GetTask = gql`
+query getTask($id: String!) {
+    getTask(id: $id) {
+        id
+        title
+        content
+        status
+        dueDate
+        createdAt
+        creator{
+          id
+          email
+        }
+        members{
+            id
+            user{
+                id
+                email
+            }
+        }
+    }
+  }
+`

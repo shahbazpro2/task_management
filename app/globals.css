@@ -5,3 +5,18 @@
 body {
   @apply bg-black;
 }
+
+.searchWrapper {
+  @apply border !border-slate-700;
+}
+.multiSelectContainer ul {
+  @apply !bg-slate-800 !border !border-slate-900;
+}
+.highlightOption,
+.highlight,
+.multiSelectContainer li:hover {
+  @apply !bg-slate-700 text-white;
+}
+.multiSelectContainer li {
+  @apply text-white;
+}

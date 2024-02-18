@@ -1,8 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
 import React from 'react'
 import Task from './Task'
-import TaskDetailModal from './TaskDetailModal'
-import { Loader2 } from 'lucide-react'
 
 interface Props {
     title: string
@@ -20,7 +19,7 @@ const MainCard = ({ footer, title, taskLoading, data }: Props) => {
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
                 </CardHeader>
-                <CardContent className='space-y-2 max-h-[75vh] overflow-auto mb-3'>
+                <CardContent className='space-y-2 max-h-[60vh] overflow-auto mb-3'>
                     {
                         taskLoading ? <Loader2 className="h-8 w-8 animate-spin mx-auto" /> : data?.map((task, i) => <Task key={i} data={task} />)
                     }
@@ -28,7 +27,7 @@ const MainCard = ({ footer, title, taskLoading, data }: Props) => {
                 {footer}
             </Card>
 
-            <TaskDetailModal />
+
         </>
     )
 }

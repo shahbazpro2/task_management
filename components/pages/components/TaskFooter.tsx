@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { CreateTaskMutation } from '@/graphql/mutations/task'
+import { GetTasks } from '@/graphql/queries/task'
 import { useUserAtom } from '@/jotai/authdata'
 import { useMutation } from '@apollo/client'
 import { Loader2 } from 'lucide-react'
@@ -10,7 +11,7 @@ import { toast } from 'react-toastify'
 
 const TaskFooter = () => {
     const [showTaskInput, setShowTaskInput] = useState(false)
-    const [addTodo, { data, loading, error }] = useMutation(CreateTaskMutation, { refetchQueries: ['GetTasks'] });
+    const [addTodo, { data, loading, error }] = useMutation(CreateTaskMutation, { refetchQueries: [GetTasks] });
     const user = useUserAtom()
 
     useEffect(() => {

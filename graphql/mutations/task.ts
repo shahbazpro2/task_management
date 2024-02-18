@@ -10,3 +10,15 @@ export const CreateTaskMutation = gql`
     }
   }
 `;
+
+export const UpdateTaskMutation = gql`
+    mutation updateTask($id:String!,$title:String!,$content:String, $status: String, $dueDate: String) {
+        updateTask(id:$id,updateTask:{title:$title, status:$status,content:$content, dueDate:$dueDate}) {
+            id
+            title
+            content
+            status
+            dueDate
+        }
+    }
+    `;

@@ -4,17 +4,21 @@ import * as React from "react"
 
 import { Progress } from "@/components/ui/progress"
 
-export function ProgressTask() {
-    const [progress, setProgress] = React.useState(13)
+export function ProgressTask({ subTasks }: any) {
+    const [progress, setProgress] = React.useState(0)
 
     React.useEffect(() => {
-        const timer = setTimeout(() => setProgress(66), 500)
-        return () => clearTimeout(timer)
-    }, [])
+        const completed = subTasks?.filter((task: any) => task.status === 'completed')
+        console.log('completed', completed)
+        const total = subTasks.length
+        const percentage = (completed.length / total) * 100
+        setProgress(percentage)
+    }, [subTasks])
+
 
     return <>
         <div className="flex gap-2 items-center">
-            <div className="text-base">50%</div>
+            <div className="text-base">{progress?.toFixed(2)}%</div>
             <Progress value={progress} className="w-full" />
         </div>
     </>

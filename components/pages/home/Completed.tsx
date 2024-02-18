@@ -1,9 +1,9 @@
 import MainCard from '../components/MainCard'
 
-const Completed = () => {
+const Completed = ({ data, taskLoading }: any) => {
     return (
         <div>
-            <MainCard title='Completed' />
+            <MainCard title='Completed' data={data} taskLoading={taskLoading} />
         </div>
     )
 }

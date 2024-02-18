@@ -6,8 +6,12 @@ import InProgress from "./InProgress"
 import Todo from "./Todo"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useLazyQuery } from "@apollo/client"
+import { useLazyQuery, useQuery } from "@apollo/client"
 import { GetTasks } from "@/graphql/queries/task"
+import TaskDetailModal from "../components/TaskDetailModal"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { GetUsers } from "@/graphql/queries/users"
+import { Label } from "@/components/ui/label"
 
 type formattedData = {
     todo: any[],
@@ -26,22 +30,25 @@ const Home = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
     const [getTasks, { data, loading: taskLoading, error }] = useLazyQuery(GetTasks);
+    const { data: users, loading: usersLoading } = useQuery(GetUsers)
     const [formattedData, setFormattedData] = useState<formattedData>(initialData)
+    const [selectedUser, setSelectedUser] = useState('')
 
     useEffect(() => {
-        console.log('data333', data)
         if (data?.getTasks) {
-            const formattedData = data.getTasks.reduce((acc: any, task: any) => {
+            const originalData = [...data.getTasks]
+            let modifiedData = JSON.parse(JSON.stringify(initialData))
+            originalData.forEach((task: any) => {
                 if (task.status === 'todo') {
-                    acc.todo.push(task)
+                    modifiedData.todo.push(task)
                 } else if (task.status === 'inprogress') {
-                    acc.inprogress.push(task)
+                    modifiedData.inprogress.push(task)
                 } else if (task.status === 'completed') {
-                    acc.completed.push(task)
+                    modifiedData.completed.push(task)
                 }
-                return acc
-            }, initialData)
-            setFormattedData({ ...formattedData })
+            })
+
+            setFormattedData({ ...modifiedData })
         }
     }, [data])
 
@@ -59,15 +66,43 @@ const Home = () => {
         }
     }, [user, loading])
 
+    const onFilterChange = (val: string) => {
+        setSelectedUser(val)
+        getTasks({ variables: { userId: val } })
+    }
+
     if (loading) return <div>Loading...</div>
 
     return (
-        <div className='p-10 flex gap-7'>
-            <Todo data={formattedData?.todo} taskLoading={taskLoading} />
-            <InProgress />
-            <Completed />
+        <>
+            <div className="flex justify-start mt-4 px-5">
+                <div className="w-[200] space-y-1">
+                    <Label htmlFor="filter">Filter By User</Label>
+                    <Select value={selectedUser || user?.id} onValueChange={onFilterChange}  >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select User to filter" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {
+                                    users?.getUsers?.map((user: any) => {
 
-        </div>
+                                        return <SelectItem key={user?.id} value={user?.id}>{user?.email}</SelectItem>
+                                    })
+                                }
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <div className='p-10 flex gap-7'>
+                <Todo data={formattedData?.todo} taskLoading={taskLoading} />
+                <InProgress data={formattedData?.inprogress} taskLoading={taskLoading} />
+                <Completed data={formattedData?.completed} taskLoading={taskLoading} />
+
+                <TaskDetailModal />
+            </div>
+        </>
     )
 }
 
